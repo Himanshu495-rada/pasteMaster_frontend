@@ -21,8 +21,8 @@ function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(`${import.meta.env.VITE_BACKEND_URL}/store`);
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/store`, {
+    console.log(`${import.meta.env.VITE_BACKEND_URL}store`);
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}store`, {
       method: "POST",
       body: JSON.stringify({
         text: textData,
@@ -37,7 +37,7 @@ function Home() {
 
   const handleGetText = async (e) => {
     e.preventDefault();
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/retrieve/${clientCode}`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}retrieve/${clientCode}`, {
       method: "GET",
       header: headers
     });
