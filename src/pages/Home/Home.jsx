@@ -1,6 +1,6 @@
 import { useState } from "react";
 import NavigationBar from "../../components/NavigationBar";
-import { Container, Form, Row, Col, Button } from "react-bootstrap";
+import { Container, Form, Row, Col, Button, Modal, Spinner } from "react-bootstrap";
 import "./Home.css";
 import copy from 'copy-to-clipboard';
 import { ToastContainer, toast } from 'react-toastify';
@@ -9,6 +9,7 @@ function Home() {
   const [code, setCode] = useState("");
   const [textData, setTextData] = useState("");
   const [clientCode, setClientCode] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const headers = {
     "Content-Type": "application/json",
@@ -21,7 +22,7 @@ function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(`${import.meta.env.VITE_BACKEND_URL}/store`);
+    setLoading(true);
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/store`, {
       method: "POST",
       body: JSON.stringify({
@@ -32,11 +33,14 @@ function Home() {
     if (response.ok) {
       const data = await response.json();
       setCode(data.code);
+      toast("Data uploaded ✈️✈️");
     }
+    setLoading(false);
   };
 
   const handleGetText = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/retrieve/${clientCode}`, {
       method: "GET",
       header: headers
@@ -44,7 +48,9 @@ function Home() {
     if (response.ok) {
       const data = await response.json();
       setTextData(data.text);
+      toast("Data received 😍😍");
     }
+    setLoading(false);
   }
 
   return (
@@ -87,6 +93,23 @@ function Home() {
           </Col>
         </Row>
       </Container>
+      <Modal show={loading} centered>
+        <Modal.Header >
+          <Modal.Title>Loading Modal</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {loading ? (
+            <div className="text-center">
+              <Spinner animation="border" role="status">
+
+              </Spinner>
+              <p>Loading...</p>
+            </div>
+          ) : (
+            <p>Content loaded successfully!</p>
+          )}
+        </Modal.Body>
+      </Modal>
       <ToastContainer />
     </>
   );
