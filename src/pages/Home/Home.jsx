@@ -49,6 +49,8 @@ function Home() {
       const data = await response.json();
       setTextData(data.text);
       toast("Data received 😍😍");
+    } else if (response.status == 404) {
+      toast("No Data found 😒");
     }
     setLoading(false);
   }
