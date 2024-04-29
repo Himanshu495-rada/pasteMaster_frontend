@@ -1,9 +1,17 @@
 import { useState } from "react";
 import NavigationBar from "../../components/NavigationBar";
-import { Container, Form, Row, Col, Button, Modal, Spinner } from "react-bootstrap";
+import {
+  Container,
+  Form,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Spinner,
+} from "react-bootstrap";
 import "./Home.css";
-import copy from 'copy-to-clipboard';
-import { ToastContainer, toast } from 'react-toastify';
+import copy from "copy-to-clipboard";
+import { ToastContainer, toast } from "react-toastify";
 
 function Home() {
   const [code, setCode] = useState("");
@@ -13,12 +21,12 @@ function Home() {
 
   const headers = {
     "Content-Type": "application/json",
-  }
+  };
 
   const handleCopy = async (e) => {
     copy(textData);
     toast("Text copied to clipboard 🥳🥳");
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,8 +36,9 @@ function Home() {
       body: JSON.stringify({
         text: textData,
       }),
-      headers: headers
+      headers: headers,
     });
+    console.log(response);
     if (response.ok) {
       const data = await response.json();
       setCode(data.code);
@@ -41,10 +50,13 @@ function Home() {
   const handleGetText = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/retrieve/${clientCode}`, {
-      method: "GET",
-      header: headers
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/retrieve/${clientCode}`,
+      {
+        method: "GET",
+        header: headers,
+      }
+    );
     if (response.ok) {
       const data = await response.json();
       setTextData(data.text);
@@ -53,7 +65,7 @@ function Home() {
       toast("No Data found 😒");
     }
     setLoading(false);
-  }
+  };
 
   return (
     <>
@@ -70,12 +82,15 @@ function Home() {
                 value={textData}
                 onChange={(event) => setTextData(event.target.value)}
               />
-              <div className="mt-4" >
-                <Button type="submit" onClick={handleSubmit} >
+              <div className="mt-4">
+                <Button type="submit" onClick={handleSubmit}>
                   Share
                 </Button>
-                {textData.length > 0 ? <Button onClick={handleCopy} style={{ marginLeft: '20px' }} >Copy</Button> : null}
-
+                {textData.length > 0 ? (
+                  <Button onClick={handleCopy} style={{ marginLeft: "20px" }}>
+                    Copy
+                  </Button>
+                ) : null}
               </div>
 
               <p className="mt-4" style={{ fontSize: "20px", color: "black" }}>
@@ -90,21 +105,21 @@ function Home() {
                 onChange={(e) => setClientCode(e.target.value)}
                 style={{ height: "50px" }}
               />
-              <Button type="submit" onClick={handleGetText} className="mt-4" >Get</Button>
+              <Button type="submit" onClick={handleGetText} className="mt-4">
+                Get
+              </Button>
             </Form>
           </Col>
         </Row>
       </Container>
       <Modal show={loading} centered>
-        <Modal.Header >
+        <Modal.Header>
           <Modal.Title>Loading Modal</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {loading ? (
             <div className="text-center">
-              <Spinner animation="border" role="status">
-
-              </Spinner>
+              <Spinner animation="border" role="status"></Spinner>
               <p>Loading...</p>
             </div>
           ) : (
